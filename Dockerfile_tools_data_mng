@@ -2,7 +2,7 @@
 #
 # VERSION       0.1
 
-FROM faang-galaxy-test
+FROM faang_chip_test_wf
 
 MAINTAINER Tianfu Yang tianfu@ualberta.ca
 
