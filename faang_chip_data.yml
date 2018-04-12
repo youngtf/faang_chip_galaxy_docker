@@ -1,20 +1,21 @@
 # configuration for fetch and index genomes
-# the list manipulation only works for ephemeris >= 0.8.0
+# This version is compatible with ephemeris < v0.8.0
 
-genomes:
-    - id: galGal5
-      name: Chicken Dec 2015 (Gallus_gallus-5.0)
+# genomes:
+#     - id: galGal5
+#      name: Chicken Dec 2015 (Gallus_gallus-5.0)
 
 data_managers:
     - id: data_manager_fetch_genome_all_fasta_dbkey
       params:
         - 'dbkey_source|dbkey_source_selector': 'existing'
-        - 'dbkey_source|dbkey': '{{ item.id }}'
-        - 'sequence_name': '{{ item.id }}'
-        - 'sequence_id': '{{ item.id }}'
+        - 'dbkey_source|dbkey': '{{ item }}'
+        - 'sequence_name': '{{ item }}'
+        - 'sequence_id': '{{ item }}'
         - 'reference_source|reference_source_selector': 'ucsc'
-        - 'reference_source|requested_identifier': '{{ item.id }}'
-      items: "{{ genomes }}"
+        - 'reference_source|requested_identifier': '{{ item }}'
+      items: 
+        - galGal5
       data_table_reload:
         - all_fasta
         - __dbkeys__
