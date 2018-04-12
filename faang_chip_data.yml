@@ -20,6 +20,17 @@ data_managers:
         - all_fasta
         - __dbkeys__
 
+    - id: bwa_mem_index_builder_data_manager
+      params:
+        - 'all_fasta_source': '{{ item }}'
+        - 'sequence_name': '{{ item }}'
+        - 'sequence_id': '{{ item }}'
+        - 'index_algorithm': 'bwtsw'
+      items:
+        - galGal5
+      data_table_reload:
+        - bwa_mem_indexes
+
 # A1: data_manager_fetch_genome_all_fasta_dbkey
       # 1. note that the id here is different from the tools name in tool shed
       # 2. setting tool parameters, nested parameters should be specified using a pipe (|) 
