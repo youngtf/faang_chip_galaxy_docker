@@ -1,0 +1,102 @@
+# configuration for fetch and index genomes
+# This version is compatible with ephemeris < v0.8.0
+
+# genomes:
+#     - id: galGal5
+#      name: Chicken Dec 2015 (Gallus_gallus-5.0)
+
+data_managers:
+    - id: data_manager_fetch_genome_all_fasta_dbkey
+      params:
+        - 'dbkey_source|dbkey_source_selector': 'existing'
+        - 'dbkey_source|dbkey': '{{ item }}'
+        - 'sequence_name': '{{ item }}'
+        - 'sequence_id': '{{ item }}'
+        - 'reference_source|reference_source_selector': 'ucsc'
+        - 'reference_source|requested_identifier': '{{ item }}'
+      items: 
+        - galGal5
+      data_table_reload:
+        - all_fasta
+        - __dbkeys__
+
+    - id: bwa_mem_index_builder_data_manager
+      params:
+        - 'all_fasta_source': '{{ item }}'
+        - 'sequence_name': '{{ item }}'
+        - 'sequence_id': '{{ item }}'
+        - 'index_algorithm': 'bwtsw'
+      items:
+        - galGal5
+      data_table_reload:
+        - bwa_mem_indexes
+
+# A1: data_manager_fetch_genome_all_fasta_dbkey
+      # 1. note that the id here is different from the tools name in tool shed
+      # 2. setting tool parameters, nested parameters should be specified using a pipe (|) 
+      # 3. check the raw xml file for the tool definition
+      # 4. Items refere to a list of variables you want to run this data manager. 
+      #    You can use them inside the param field with {{ item }}
+      # 5. In case of genome for example you can run this DM with multiple genomes, 
+      #    or you could give multiple URLs.
+      # 6. Name of the data-tables you want to reload after your DM are finished. 
+      #    This can be important for subsequent data managers
+      
+# A1.1: parameters for fetch_genome_all_fasta_dbkey: new ref
+    # - id: data_manager_fetch_genome_all_fasta_dbkey
+      # params:
+      #   - 'dbkey_source|dbkey_source_selector': 'new'
+      #   - 'dbkey_source|dbkey': '{{ item.id }}'
+      #   - 'dbkey_source|dbkey_name': '{{ item.name }}'
+      #   - 'sequence_name': '{{ item.name }}'
+      #   - 'sequence_id': '{{ item.id }}'
+      #   - 'reference_source|reference_source_selector': 'ncbi'
+      #   - 'reference_source|requested_identifier': '{{ item.accession }}'
+      # items:
+        # - id: ce6
+      # data_table_reload:
+        # - all_fasta
+        # - __dbkeys__
+
+# A1.2: parameters for fetch_genome_all_fasta_dbkey: using exact id (no list)
+      # params:
+      #   - 'dbkey_source|dbkey_source_selector': 'existing'
+      #   - 'dbkey_source|dbkey': 'galGal5'
+      #   - 'sequence_name': 'galGal5'
+      #   - 'sequence_id': 'galGal5'
+      #   - 'reference_source|reference_source_selector': 'ucsc'
+      #   - 'reference_source|requested_identifier': 'galGal5'
+
+# A2: bowtie2_index_builder_data_manager
+      # 1. toolshed.g2.bx.psu.edu/repos/devteam/data_manager_bowtie2_index_builder/bowtie2_index_builder_data_manager/2.2.6
+      # 2. Bowtie creates indices for Bowtie and TopHat
+
+# A2.1: bowtie2_index_builder_data_manager: an example
+    # - id: bowtie2_index_builder_data_manager
+      # params:
+       # - 'all_fasta_source': '{{ item.id }}'
+       # - 'sequence_name': '{{ item.name }}'
+       # - 'sequence_id': '{{ item.id }}'
+      # items:
+       # - id: ce8
+       #   name: C. elegans (ce8)
+       # - id: dm3
+       #   name: D. melanogaster Apr. 2006 (BDGP r5/dm3)
+       # - id: mm9
+       #   name: M. musculus July 2007 (NCBI37/mm9)
+     # data_table_reload:
+       # - bowtie2_indexes
+       # - tophat2_indexes
+
+# A3: sam_fasta_index_builder
+
+# A3.1: sam_fasta_index_builder: an example
+    # - id: sam_fasta_index_builder
+      # params:
+        # - 'all_fasta_source': '{{ item.id }}'
+        # - 'sequence_name': '{{ item.name }}'
+        # - 'sequence_id': '{{ item.id }}'
+      # items: "{{ genomes }}"
+      # data_table_reload:
+        # - fasta_indexes
+
